@@ -1,5 +1,10 @@
 # Szybka instrukcja: Klipper na BTT Pi V1.2 + Sidewinder X2 (Artillery_Ruby-v1.2)
 
+Stan końcowy, który działa w tym repo:
+- `printer.cfg` ma na górze `[include mainsail.cfg]`
+- `mainsail.cfg` jest zgodny z Klipperem i nie używa sekcji `[mainsail]`
+- plik `printer-artillery-sidewinder-x2-bttpi.cfg` zawiera `host:gpio211` oraz `[mcu host] serial: /tmp/klipper_host_mcu`
+
 Podsumowanie kroków:
 - Przygotuj microSD z systemem dla BTT Pi (oficjalnie: obraz jak dla CB1)
 - Zainstaluj Klipper na BTT Pi (host)
@@ -95,6 +100,11 @@ Po poprawnym flashowaniu usuń mostek Boot0 i zrestartuj płytę.
 - Dopasuj w nim:
   - `[mcu] serial:` ustaw na rzeczywisty port urządzenia (np. `/dev/serial/by-id/usb-Klipper_stm32f401xc_...`)
   - Jeśli chcesz używać GPIO BTT Pi jako kontrolera dodatkowych urządzeń: użyj `host:gpioXXX` (w pliku jest `host:gpio211` dla wentylatora)
+  - Na samej górze dodaj:
+
+```ini
+[include mainsail.cfg]
+```
 
 Uwaga dotycząca socketu host MCU:
 - Aby `host:gpioNNN` działało, Klipper musi uruchamiać moduł "RPi microcontroller" który tworzy socket (np. `/tmp/klipper_host_mcu`). Postępuj zgodnie z dokumentacją Klippera: https://www.klipper3d.org/RPi_microcontroller.html i w razie potrzeby włącz serwis/skript tworzący socket. Po uruchomieniu systemu na BTT Pi sprawdź istnienie socketu:
@@ -104,6 +114,10 @@ ls -l /tmp/klipper_host_mcu
 ```
 
 Jeżeli socket nie istnieje, sprawdź logi Klippera i instrukcję na stronie powyżej.
+
+Uwaga praktyczna:
+- `mainsail.cfg` musi być plikiem Klippera z sekcjami `[virtual_sdcard]`, `[pause_resume]`, `[display_status]` oraz makrami `PAUSE/RESUME/CANCEL_PRINT`.
+- Sekcja `[mainsail]` nie jest poprawną sekcją Klippera i powoduje błąd parsowania.
 
 7) Usługi i uruchomienie
 
